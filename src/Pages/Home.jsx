@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getAllProducts } from "../Services/api"
+import ProductCard from "../Components/ProductCard"
 
 const Home = () => {
   const [products, setProducts] = useState([])
@@ -37,6 +38,11 @@ const Home = () => {
           <p className="text-blue-600 font-semibold">₹{product.price}</p>
         </div>
       ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+        ))}
+                </div>
     </div>
   )
 }
