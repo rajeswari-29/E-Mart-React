@@ -1,21 +1,23 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 
 const Navbar = () => {
   return (
-    <nav className="bg-dark p-3">
-      <div className="container d-flex justify-content-between">
-        <Link to="/" className="text-white text-decoration-none fw-bold">
+    <nav className="bg-blue-600 text-white p-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-xl font-bold">
           E-Mart
         </Link>
 
-        <div className="d-flex gap-3">
-          <Link to="/" className="text-white text-decoration-none">
+        <div className="space-x-6">
+          <Link to="/" className="hover:text-gray-200">
             Home
           </Link>
-          <Link to="/cart" className="text-white text-decoration-none">
+
+          <Link to="/cart" className="hover:text-gray-200">
             Cart
           </Link>
-          <Link to="/login" className="text-white text-decoration-none">
+
+          <Link to="/login" className="hover:text-gray-200">
             Login
           </Link>
         </div>
