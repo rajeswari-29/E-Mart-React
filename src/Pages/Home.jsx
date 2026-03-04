@@ -28,21 +28,8 @@ const Home = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {products.map((product) => (
-        <div key={product.id} className="border p-4 rounded shadow">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="h-40 mx-auto object-contain"
-          />
-          <h3 className="font-bold mt-2">{product.title}</h3>
-          <p className="text-blue-600 font-semibold">₹{product.price}</p>
-        </div>
+        <ProductCard key={product.id} product={product} />
       ))}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-        ))}
-                </div>
     </div>
   )
 }
