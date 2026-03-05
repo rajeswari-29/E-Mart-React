@@ -1,70 +1,98 @@
-import { useEffect, useState } from "react"
-import { getAllProducts, getCategories } from "../Services/api"
-import ProductCard from "../Components/ProductCard"
-import { useContext } from "react"
-import { CartContext } from "../Context/CartContext"
-
+import React, { useEffect, useState } from "react";
+import { getAllProducts, getCategories } from "../Services/api";
+import ProductCard from "../components/ProductCard";
+import SearchBar from "../components/SearchBar";
 
 const Home = () => {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productsData = await getAllProducts();
+        const categoryData = await getCategories();
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const productsData = await getAllProducts()
-      const categoryData = await getCategories()
+        setProducts(productsData);
+        setCategories(categoryData);
+      } catch (error) {
+        console.error("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setProducts(productsData)
-      setCategories(categoryData)
-    } catch (err) {
-      setError("Something went wrong")
-    } finally {
-      setLoading(false)
-    }
+    fetchData();
+  }, []);
+
+  // FILTER PRODUCTS
+  const filteredProducts = products
+    .filter((p) =>
+      selectedCategory === "all" ? true : p.category === selectedCategory
+    )
+    .filter((p) =>
+      p.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  if (loading) {
+    return <h2 className="text-center text-xl mt-10">Loading products...</h2>;
   }
 
-  fetchData()
-}, [])
+  return (
+    <div className="flex">
 
-  if (loading) return <h2>Loading...</h2>
-  if (error) return <h2>{error}</h2>
+      {/* LEFT SIDE CATEGORY SIDEBAR */}
+      <div className="w-64 p-4 border-r bg-gray-50 min-h-screen">
 
- return (
-  <div className="p-4">
+        <h2 className="text-xl font-bold mb-6">Categories</h2>
 
-    <select
-      className="border p-2 mb-4"
-      value={selectedCategory}
-      onChange={(e) => setSelectedCategory(e.target.value)}
-    >
-      <option value="all">All</option>
+        <button
+          onClick={() => setSelectedCategory("all")}
+          className={`block w-full text-left px-3 py-2 rounded mb-2 
+          ${selectedCategory === "all"
+            ? "bg-blue-500 text-white"
+            : "hover:bg-gray-200"}`}
+        >
+          All
+        </button>
 
-      {categories.map((cat) => (
-        <option key={cat} value={cat}>
-          {cat}
-        </option>
-      ))}
-    </select>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {products
-        .filter((product) =>
-          selectedCategory === "all"
-            ? true
-            : product.category === selectedCategory
-        )
-        .map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`block w-full text-left px-3 py-2 rounded mb-2 
+            ${selectedCategory === cat
+              ? "bg-blue-500 text-white"
+              : "hover:bg-gray-200"}`}
+          >
+            {cat}
+          </button>
         ))}
+      </div>
+
+      {/* RIGHT SIDE PRODUCTS */}
+      <div className="flex-1 p-6">
+
+        {/* SEARCH BAR */}
+        <SearchBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
+
+        {/* PRODUCTS GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
+      </div>
+
     </div>
+  );
+};
 
-  </div>
-)
-}
-
-export default Home
+export default Home;
