@@ -43,12 +43,30 @@ const Cart = () => {
             Remove
           </button>
         </div>
+        
+
       ))}
 
       <h3 className="text-xl font-bold mt-6">
         Total: ₹{totalPrice.toFixed(2)}
       </h3>
+       <h2>Cart Items</h2>
+
+      {cart.map((item) => (
+        <div key={item.id}>
+          <h3>{item.title}</h3>
+          <p>Price: ${item.price}</p>
+          <p>Qty: {item.quantity}</p>
+
+          <button onClick={() => removeFromCart(item.id)}>
+            Remove
+          </button>
+        </div>
+      ))}
+
+      <h2>Total: ${totalPrice}</h2>
     </div>
+    
   )
 }
 

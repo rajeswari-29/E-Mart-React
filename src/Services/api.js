@@ -12,9 +12,19 @@ export const getAllProducts = async () => {
 
 export const getSingleProduct = async (id) => {
   const response = await fetch(`${BASE_URL}/products/${id}`)
-
+  
   if (!response.ok) {
     throw new Error("Failed to fetch product")
+  }
+
+  return response.json()
+}
+
+export const getCategories = async () => {
+  const response = await fetch(`${BASE_URL}/products/categories`)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch categories")
   }
 
   return response.json()
